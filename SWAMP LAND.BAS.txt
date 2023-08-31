@@ -1,0 +1,300 @@
+ 5  REM 
+
+
+*********START*********
+
+
+
+ 10  GOSUB 960: HOME :SD = 1:Y = 3: GOTO 520
+ 15  REM 
+
+
+*******MAIN*GAME*******
+
+
+
+ 50  IF K = 1 THEN X% = X% + ( PDL (0) - 127) / 128
+ 60  HTAB X% + 1: VTAB 22: PRINT A$(A%);: TEXT : HTAB 33: VTAB 16: PRINT TM" ": IF  PEEK ( - 16384) > 127 THEN  GOSUB 840
+ 70  IF FI OR  PEEK ( - 16287) > 127 AND K = 1 THEN  GOSUB 260
+ 80  IF X% > 22 THEN X% = 22
+ 90  IF X% < 2 THEN X% = 2
+ 100 A% = A% + 1: IF A% > 3 THEN A% = 0
+ 110  IF SD THEN  & TA% * 2,3: & TA% * 2 + 10,3
+ 120 TM = TM - 1: IF TM < 0 THEN  GOSUB 920: GOTO 930
+ 130  IF O% = 1 AND SD OR O% = 3 AND SD THEN  & T30,2: & T25,3: & T30,2: & T25,3: & T30,2: & T25,3
+ 140  INVERSE : IF T THEN 170
+ 150  HTAB D + 1: VTAB 16: PRINT D$(O%);:O% = O% + 1:D = D - 1
+ 160  GOTO 180
+ 170  HTAB D + 1: VTAB 16: PRINT D$(O% + 4);:O% = O% + 1:D = D + 1
+ 180  IF O% > 3 THEN O% = 0
+ 190  IF D > 18 OR D < 3 OR  RND (1) > .7 THEN T =  - T + 1
+ 200 B3 = B3 + ( RND (1) - .5) * 2:B = B + ( RND (1) - .5) * 2: IF B3 > 12 THEN B3 = 12
+ 210  IF B < 3 THEN B = 3
+ 220  IF B3 < 3 THEN B3 = 3
+ 230  IF B > 20 THEN B = 20
+ 240  HTAB B + 1: VTAB B3: PRINT B$(B1%);:B1% = B1% + C: IF B1% > 2 OR B1% < 1 THEN C =  - C
+ 250  NORMAL : GOTO 50
+ 255  REM 
+
+
+*******FIRE*SHOT*******
+
+
+
+ 260  IF YW < 3 THEN XW = X% + 3:YW = 22:FI = 1
+ 270  HTAB XW: VTAB YW: IF YW < 18 THEN  INVERSE 
+ 280  IF YW = 18 THEN  PRINT "-=-": FOR FG = 1 TO 90: NEXT : HTAB XW: VTAB 18: PRINT "   
+ ":YW = YW - 2: INVERSE : HTAB XW: VTAB 17: PRINT ".": HTAB XW: VTAB YW: IF SD THEN  & T200,4: & T250,3: & T200,4: & T10,5:: & T50,4: & T250,3: & T100,4: & T20,5
+ 290  PRINT ".
+ ": IF SD THEN  & T(YW + 10),3
+ 300 YW = YW - 1: IF YW < 3 THEN FI = 0: HTAB XW: VTAB YW + 1: PRINT " "
+ 310  IF XW > D + 1 AND XW < D + 7 AND YW = 15 THEN ST = 2:ADD = 20:XW = D:YW = 16:TY = 0: GOSUB 410
+ 320  IF XW > B + 1 AND XW < B + 7 AND YW > B3 - 1 AND YW < B3 + 1 THEN ADD = 100:ST = 10:XW = B:YW = B3 + 1:TY = 1: GOSUB 410
+ 330  RETURN 
+ 405  REM 
+
+
+*******EXPLOSION*******
+
+
+
+ 410 FI = 0: INVERSE : IF SD THEN  FOR P = 0 TO 8: FOR T6 = 1 TO 10: & T RND (1) * 255,2
+ 420  IF  NOT SD THEN  FOR P = 0 TO 8: FOR T6 = 1 TO 100
+ 425  REM 
+
+
+********POINTS*********
+
+
+
+ 430  NEXT : HTAB XW + 1: VTAB YW: PRINT EX$(P);: NEXT : NORMAL : TEXT : FOR T6 = 1 TO ADD STEP ST:SCR = SCR + ST: HTAB 33: VTAB 6: PRINT SCR: IF SD THEN  & T10,5: & T100,5
+ 440  NEXT 
+ 450  IF SCR > HSCR THEN  FOR T6 = 1 TO SCR - HSCR STEP ST:HSCR = HSCR + ST:HO = 1: HTAB 33: VTAB 11: PRINT HSCR: IF SD THEN  & T200,5: & T100,5
+ 460  IF SCR > HSCR THEN  NEXT 
+ 470  HTAB 1: VTAB 1:YW = 0: FOR T6 = 1 TO 10:TM = TM + 1: IF SD THEN  & T50,5: & T100,5
+ 480  HTAB 33: VTAB 16: PRINT TM" ": NEXT 
+ 485  REM 
+
+
+*******NEW*BIRD********
+
+
+
+ 490  IF TY THEN B3 =  INT ( RND (1) * 8 + 3):B =  INT ( RND (1) * 16 + 3):XX = B:YY = B3: GOSUB 790
+ 500  IF  NOT TY THEN D =  INT ( RND (1) * 14 + 3):XX = D:YY = 13: GOSUB 790
+ 510  HTAB 1: VTAB 1: NORMAL : RETURN 
+ 515  REM 
+
+
+*****READ*OFF*DATA*****
+
+
+
+ 520  POKE 1013,76: POKE 1014,0: POKE 1015,3: FOR I = 768 TO 833: READ A: POKE I,A: NEXT 
+ 530  DATA  201,84,208,15,32,177,0,32,248,230,138,72,32,183,0,201,44,240,3,76,201,222,32,177,0,32,248,230,104,134,3,134,1,133,0,170,160,1,132,2,173,48,192,136,208,4,198,1,240,7,202,208,246,166,0,208,239,165,3,133,1,198,2,208,241,96
+ 540  DIM EX$(8): FOR I = 0 TO 8: READ EX$(I): NEXT 
+ 545  DATA "   ()  
+   ()  ","  (AN) 
+  (()) ",".(BANG)
+ ((()))","  (AN) 
+.S(())."," . () .
+ SM()H.","  . .  
+.SMASH.","  ...  
+. MAS..","       
+. .A.. ","       
+       "
+ 550  DIM EG$(10): FOR I = 0 TO 9: READ EG$(I): NEXT 
+ 555  DATA "        
+  ____  
+ /EGG \ 
+(      )
+ \____/ ","        
+  ____  
+ /    \ 
+( EGG  )
+ \____/ "
+ 556  DATA "        
+  ____  
+ /    \ 
+(      )
+ \EGG_/ "  
+ 560  DATA "        
+  ____  
+ /    \ 
+(      )
+ \____/ ","        
+  ____  
+ /    \ 
+(      )
+ \____/ "
+ 565  DATA "        
+  ____  
+ /    \ 
+(      )
+ \____/ "  
+ 570  DATA ".CRACK..
+  _ __  
+ / \\ \ 
+(  //  )
+ \_\\_/ "," CRACK .
+ . .__ .
+ /\.\ \ 
+( / /  )
+ \/ /_/ "
+ 575  DATA " CRACK  
+    .   
+ /\. /\ 
+( /..\ )
+.\/ .\/.","        
+        
+        
+        
+        "
+ 580  DIM A$(3): FOR I = 0 TO 3: READ A$(I): NEXT : DATA "     
+ (_) ","     
+ !^! ","  _  
+ ) ( ","  ^  
+ ! ! "
+ 590  DIM D$(7): FOR I = 0 TO 7: READ D$(I): NEXT : DATA " \0\__ 
+ /\_/  "," _O\_/ 
+  \_/  "," \O\__ 
+ /\_/  "," _O\_/ 
+  \_/  "," __/0/ 
+  \_/\ "," \_/O_ 
+  \_/  "," __/O/ 
+  \_/\ "," \_/O_ 
+  \_/  
+ 600  DIM B$(3): FOR I = 0 TO 3: READ B$(I): NEXT : DATA "       
+       
+ __O__ 
+       ","       
+       
+ /\O/\ 
+       ","       
+       
+ /^O^\ 
+       "
+ 605  DATA "       
+ _   _ 
+  \O/  
+       "
+ 610  DIM LL$(18): FOR I = 1 TO 15: READ LL$(I): NEXT 
+ 620  DATA "                         "," ... .   .  .  .   . ... "," .   .   . . . .. .. . . "," ... .   . ... . . . ... ","   . . . . . . .   . .   "," ... .. .. . . .   . .   ","                         "     
+ 630  DATA "     .    .  .  . ..     ","     .   . . .. . . .    ","     .   ... .... . .    ","     .   . . . .. . .    ","     ... . . .  . ..     ","                         ","     BY : JIM SURINE     ","                         "
+ 635  REM 
+
+
+*****DISPLAY*TITLE*****
+
+
+
+ 640 TM = 99: TEXT : NORMAL :B% = 1:C = 1:X% = 10
+ 650  TEXT : HTAB 1: VTAB 1: PRINT " ___________________________   ________ ";: FOR X = 1 TO 8: PRINT ")" SPC( 27)") )        )(" SPC( 27)"( (        (";: NEXT 
+ 660  PRINT ") ::" SPC( 21)":: ) )        )( ))" SPC( 21)")) ( (        () ((" SPC( 21)"(( ) )        )( ))" SPC( 21)")) ( (        ()" SPC( 27)") )        )( [ (J)OYSTICK (K)EYBOARD ] ( (        ()___________________________) )________";: POKE 2039,169
+ 670  INVERSE : HTAB 33: VTAB 3: PRINT "      ": HTAB 33: VTAB 4: PRINT "SCORE ":: HTAB 33: VTAB 8: PRINT "HIGH  ": HTAB 33: VTAB 9: PRINT "SCORE ":: HTAB 33: VTAB 13: PRINT "      ": HTAB 33: VTAB 14: PRINT "TIME  "
+ 675  REM 
+
+
+****DISPLAY*SCORE******
+
+
+
+ 680  NORMAL : HTAB 33: VTAB 6: PRINT 0: HTAB 33: VTAB 11: PRINT HSCR: HTAB 33: VTAB 16: PRINT TM: INVERSE : FOR I = 3 TO 17: HTAB 3: VTAB I: PRINT LL$(I - 2): NEXT : TEXT : NORMAL 
+ 685  REM 
+
+
+*******GOSUB*GET*******
+
+
+
+ 686  IF HO THEN  GOSUB 960:HO = 0
+ 690  GOSUB 760
+ 695  REM 
+
+
+****TEST*CHARACTER*****
+
+
+
+ 700 K = 0: IF A$ = "K" THEN K = 2: FOR YO = 1 TO 35: IF SD THEN  & T RND (1) * 50 + 100,3: & T RND (1) * 50 + 100,5: & T RND (1) * 200,3: NEXT 
+ 710  IF A$ = "J" THEN K = 1: FOR YO = 1 TO 35: IF SD THEN  & T RND (1) * 50,1: & T RND (1) * 50,4: & T RND (1) * 100,5: & T RND (1) * 100,3: NEXT 
+ 720  IF A$ = "S" THEN SD =  - SD + 1
+ 730  IF K = 0 THEN 690
+ 735  REM 
+
+
+******CLEAR*TITLE******
+
+
+
+ 740  VTAB 23: HTAB 3: PRINT  SPC( 25): INVERSE : FOR I = 3 TO 17: HTAB 3: VTAB I: PRINT  SPC( 25): NEXT : HTAB 1: VTAB 1
+ 745  REM 
+
+
+******DROP*2*EGGS******
+
+
+
+ 750 TY = 1:B3 =  INT ( RND (1) * 8 + 3):B =  INT ( RND (1) * 16 + 3):XX = B:YY = B3: GOSUB 790:TY = 0:D =  INT ( RND (1) * 14 + 3):XX = D:YY = 13: GOSUB 790: NORMAL : GOTO 50
+ 755  REM 
+
+
+******GET*GOSUB********
+
+
+
+ 760  IF  PEEK ( - 16384) > 127 THEN  GET A$: RETURN 
+ 770  IF SD THEN  & TP,5: & T RND (1) * 255,5: & T RND (1) * 255,5: FOR SY = 1 TO 50: NEXT :P = P + 1: IF P > 18 THEN P = 1
+ 780  GOTO 760
+ 785  REM 
+
+
+******DROP*CRACK*******
+
+
+
+ 790  INVERSE : HTAB XX + 1: VTAB Y: PRINT EG$(E%);:E% = E% + 1: IF E% > 5 THEN E% = 0
+ 794  IF  NOT TY THEN  HTAB B: VTAB B3: PRINT B$(B1%);
+ 795  IF SD THEN : & TY,2: & TY + 4,2: & TY + 10,2: & TY + 20,2
+ 800 Y = Y + 1: IF Y > YY THEN E% = 6: GOTO 820
+ 810  GOTO 790
+ 820  FOR I = 1 TO 100: NEXT : HTAB XX + 1: VTAB YY: PRINT EG$(E%);:E% = E% + 1: IF E% > 10 THEN 831
+ 825  IF SD THEN  & T RND (1) * 100,2: & T100,2: & T30,2: & T70,2
+ 830  GOTO 820
+ 831  IF SD THEN  & T200,3: & T250,3: & T100,3: & T150,2
+ 832 E% = 0:Y = 3: RETURN 
+ 840  GET K$: IF K = 2 AND K$ = "" THEN X% = X% - 1
+ 860  IF K = 2 AND K$ = "" THEN X% = X% + 1
+ 870  IF K$ = "S" OR K$ = "" THEN SD =  - SD + 1:K$ = ""
+ 880  IF K$ = "" THEN  GOTO 930
+ 890  IF K$ = "" THEN  POKE  - 16386,0: HTAB 7: VTAB 23: PRINT "( PRESS ANY KEY )";: GOSUB 760: HTAB 7: VTAB 23: PRINT "                 ";: HTAB 1: VTAB 1: POKE  - 16386,0:K$ = "": IF SD THEN  FOR OI = 1 TO 10: & T RND (1) * 254,2: & T RND (1) * 254,2: & T RND (1) * 254,2: NEXT 
+ 900  IF K$ = " " AND K = 2 THEN FI = 1
+ 910  RETURN 
+ 915  REM 
+
+
+******GAME*OVER********
+
+
+
+ 920  NORMAL : HTAB 11: VTAB 23: PRINT "GAME OVER": GOSUB 760: RETURN 
+ 925  REM 
+
+
+*****START*OVER********
+
+
+
+ 930 O% = 0:TM = 99:YW = 0:XW = 0:D = 1:FI = 0:A% = 0: TEXT :B3 = 12:B% = 1:C = 1:B = 12:X% = 10:K1% = 0:D = 16:SCR = 0:B1% = 0: GOTO 640
+ 955  REM 
+
+
+****HIGH*SCORE*DISK****
+
+
+
+ 960  GOSUB 1000: IF UW < HSCR THEN  GOSUB 1050: RETURN 
+ 965 HSCR = UW: RETURN 
+ 1000  HTAB 1: VTAB 1: PRINT "
+": PRINT "BLOADHSSL,A760":UW =  PEEK (760) * 256 +  PEEK (761): RETURN 
+ 1050  POKE 760, INT (HSCR / 256): POKE 761,HSCR - ( INT (HSCR / 256) * 256): PRINT "BSAVEHSSL,A760,L2": RETURN 
